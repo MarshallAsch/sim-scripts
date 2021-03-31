@@ -17,7 +17,7 @@ FOLDER_NAME="BATCH-R${RADIUS}-T${RELOCATION}-C${SPACE}-SD${SD}"
 NOTES="$FOLDER_NAME/NOTES.txt"
 #TIME_FILE="$FOLDER_NAME/RUNTIME.txt"
 
-SIM_DIR="../scratch/saf/"
+SIM_DIR="../scratch/saf"
 WAF_DIR=".."
 
 
@@ -25,7 +25,7 @@ SIM_COMMIT=$(git -C $SIM_DIR rev-parse --short HEAD)
 SCRIPTS_COMMIT=$(git rev-parse --short HEAD)
 
 
-mkdir -p "$FOLDER_NAME"
+mkdir -p "DATA/$FOLDER_NAME"
 
 echo "RUNNING '$NUM_RUNS' sumulation runs of the configuration with: " >> "$NOTES"
 echo "DATE: $DATE" >> "$NOTES"
@@ -38,7 +38,7 @@ echo "SIMULATION_COMMIT: $SIM_COMMIT" >> "$NOTES"
 echo "" >> "$NOTES"
 echo "===================================" >> "$NOTES"
 echo "FULL command that was invoked:" >> "$NOTES"
-echo "$WAF_DIR/waf --run  \"$SIM_DIR --run-time=50000 --seed=57140259 --total-nodes=40 \
+echo "$WAF_DIR/waf --run  \"$SIM_DIR/saf --run-time=50000 --seed=57140259 --total-nodes=40 \
  --run=$RUN_NUM \
  --wifi-radius=$RADIUS --relocation-period=$RELOCATION --replica-space=$SPACE \
  --request-timeout=50000 --data-size=256 --routing=AODV --start-delay=0	\
