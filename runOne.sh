@@ -22,4 +22,5 @@ echo "/usr/bin/time -o $TIME_FILE -a -f \"run $RUN_NUM - %M Kbytes\t%E\" --  $WA
  --access-frequency-type=$TYPE --standard-deviation=$S
  --min-speed=0 --max-speed=1 --min-pause=0 --max-pause=0\" " | bash
 
+#echo "$WAF_DIR/data-$RUN_NUM.sca" "$FOLDER_NAME/data-$(printf "%04i" $RUN_NUM).sca"
 mv "$WAF_DIR/data-$RUN_NUM.sca" "$FOLDER_NAME/data-$(printf "%04i" $RUN_NUM).sca"

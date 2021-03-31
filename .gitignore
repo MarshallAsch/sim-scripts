@@ -1,2 +1,7 @@
+
+#ignore the arg file used when running GNU parallel
 argfile.txt
-BATCH*
+
+
+# Ignore all the generated data
+DATA

@@ -6,40 +6,41 @@ RADIUS=$3
 RELOCATION=$4
 SPACE=$5
 SD=$6
-if [ -z "$SD" ]; then SD=0 ; fi
+DATE=$7
+
+
+SIM_DIR=$8
+WAF_DIR=$9
+SIM_COMMIT=${10}
+SCRIPT_COMMIT=${11}
 
 TYPE=1
 if [[ "$SD" != "0" ]]; then TYPE=3 ; fi
 
 
-DATE=$(date +"%A %B %d, %Y")
-FOLDER_NAME="BATCH-R${RADIUS}-T${RELOCATION}-C${SPACE}-SD${SD}"
+#$DATE=$(date +"%A %B %d, %Y")
+FOLDER_NAME="DATA/BATCH-R${RADIUS}-T${RELOCATION}-C${SPACE}-SD${SD}"
 NOTES="$FOLDER_NAME/NOTES.txt"
 #TIME_FILE="$FOLDER_NAME/RUNTIME.txt"
 
-SIM_DIR="../scratch/saf"
-WAF_DIR=".."
 
+mkdir -p "$FOLDER_NAME"
 
-SIM_COMMIT=$(git -C $SIM_DIR rev-parse --short HEAD)
-SCRIPTS_COMMIT=$(git rev-parse --short HEAD)
-
-
-mkdir -p "DATA/$FOLDER_NAME"
-
-echo "RUNNING '$NUM_RUNS' sumulation runs of the configuration with: " >> "$NOTES"
+echo "RUNNING $NUM_RUNS SAF Simulation runs using the following configuration: " >> "$NOTES"
 echo "DATE: $DATE" >> "$NOTES"
+echo "===================================" >> "$NOTES"
+echo "RUN NUMBER: $NUM_RUNS" >> "$NOTES"
 echo "WIFI RADIUS: $RADIUS" >> "$NOTES"
 echo "RELOCATION PERIOD: $RELOCATION" >> "$NOTES"
 echo "REPLICA SPACE: $SPACE" >> "$NOTES"
 echo "STANDARD DEVIATION: $SD" >> "$NOTES"
-echo "SCRIPTS COMMIT: $SCRIPTS_COMMIT" >> "$NOTES"
-echo "SIMULATION_COMMIT: $SIM_COMMIT" >> "$NOTES"
+echo "SCRIPTS COMMIT: $SCRIPT_COMMIT" >> "$NOTES"
+echo "SIMULATION COMMIT: $SIM_COMMIT" >> "$NOTES"
 echo "" >> "$NOTES"
 echo "===================================" >> "$NOTES"
 echo "FULL command that was invoked:" >> "$NOTES"
 echo "$WAF_DIR/waf --run  \"$SIM_DIR/saf --run-time=50000 --seed=57140259 --total-nodes=40 \
- --run=$RUN_NUM \
+ --run=XXXXXX \
  --wifi-radius=$RADIUS --relocation-period=$RELOCATION --replica-space=$SPACE \
  --request-timeout=50000 --data-size=256 --routing=AODV --start-delay=0	\
  --area-width=50 --area-length=50 --total-nodes=40 --data-items=40 \
@@ -47,7 +48,7 @@ echo "$WAF_DIR/waf --run  \"$SIM_DIR/saf --run-time=50000 --seed=57140259 --tota
  --min-speed=0 --max-speed=1 --min-pause=0 --max-pause=0\" "  >> "$NOTES"
 
 for (( i = STARTNUM; i < STARTNUM+NUM_RUNS; i++ )); do
-    echo "$i $RADIUS $RELOCATION  $SPACE $TYPE $SD $SIM_DIR $WAF_DIR $FOLDER_NAME" >> argfile.txt
+    echo "$i $RADIUS $RELOCATION $SPACE $TYPE $SD $SIM_DIR $WAF_DIR $FOLDER_NAME" >> argfile.txt
 	#./runOne.sh $i $RADIUS $RELOCATION  $SPACE $TYPE $SD $SIM_DIR $WAF_DIR $FOLDER_NAME $TIME_FILE
 	#mv "$WAF_DIR/data-$i.sca" "$FOLDER_NAME/data-$i.sca"
 done
