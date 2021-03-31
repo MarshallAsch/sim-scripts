@@ -10,7 +10,8 @@ SD=$6
 SIM_DIR=$7
 WAF_DIR=$8
 FOLDER_NAME=$9
-TIME_FILE=${10}
+TIME_FILE="$FOLDER_NAME/RUNTIME.txt"
+
 
 echo "/usr/bin/time -o $TIME_FILE -a -f \"run $RUN_NUM - %M Kbytes\t%E\" --  $WAF_DIR/waf \
  --run  \"$SIM_DIR --run-time=50000 --seed=57140259 --total-nodes=40 \

@@ -15,7 +15,7 @@ if [[ "$SD" != "0" ]]; then TYPE=3 ; fi
 DATE=$(date +"%A %B %d, %Y")
 FOLDER_NAME="BATCH-R${RADIUS}-T${RELOCATION}-C${SPACE}-SD${SD}"
 NOTES="$FOLDER_NAME/NOTES.txt"
-TIME_FILE="$FOLDER_NAME/RUNTIME.txt"
+#TIME_FILE="$FOLDER_NAME/RUNTIME.txt"
 
 SIM_DIR="../scratch/saf/"
 WAF_DIR=".."
@@ -47,7 +47,7 @@ echo "$WAF_DIR/waf --run  \"$SIM_DIR --run-time=50000 --seed=57140259 --total-no
  --min-speed=0 --max-speed=1 --min-pause=0 --max-pause=0\" "  >> "$NOTES"
 
 for (( i = STARTNUM; i < STARTNUM+NUM_RUNS; i++ )); do
-    echo "$i $RADIUS $RELOCATION  $SPACE $TYPE $SD $SIM_DIR $WAF_DIR $FOLDER_NAME $TIME_FILE" >> argfile.txt
+    echo "$i $RADIUS $RELOCATION  $SPACE $TYPE $SD $SIM_DIR $WAF_DIR $FOLDER_NAME" >> argfile.txt
 	#./runOne.sh $i $RADIUS $RELOCATION  $SPACE $TYPE $SD $SIM_DIR $WAF_DIR $FOLDER_NAME $TIME_FILE
 	#mv "$WAF_DIR/data-$i.sca" "$FOLDER_NAME/data-$i.sca"
 done
