@@ -24,7 +24,7 @@ SPACE=10
 SD=0
 
 DATE=$(date +"%A-%B-%d-%Y")
-SIM_DIR="../scratch/saf"
+SIM_DIR="scratch/saf"
 WAF_DIR=".."
 SIM_COMMIT=$(git -C $SIM_DIR rev-parse --short HEAD)
 SCRIPT_COMMIT=$(git rev-parse --short HEAD)
