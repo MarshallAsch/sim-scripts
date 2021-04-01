@@ -30,36 +30,36 @@ SIM_COMMIT=$(git -C $SIM_DIR rev-parse --short HEAD)
 SCRIPT_COMMIT=$(git rev-parse --short HEAD)
 
 
-### RADUS RANGE
-STARTNUM=1
-for (( i = 1; i < 20; i++ )); do
-	#statements
-	start=$((STARTNUM + (i-1) * NUM_RUNS))
-	./runbatch.sh $start $NUM_RUNS $i $RELOCATION $SPACE $SD $DATE $SIM_DIR $WAF_DIR $SIM_COMMIT $SCRIPT_COMMIT
-done
-
-### CAPACITY RANGE
-STARTNUM=191
-for (( i = 1; i < 40; i++ )); do
-	#statements
-	start=$((STARTNUM + (i-1) * NUM_RUNS))
-	./runbatch.sh $start $NUM_RUNS $RADIUS $RELOCATION $i $SD $DATE $SIM_DIR $WAF_DIR $SIM_COMMIT $SCRIPT_COMMIT
-done
-
-#for (( i = 20; i < 40; i++ )); do
-#	#statements
-#	start=$((STARTNUM + (i-1) * NUM_RUNS))
-#	./runbatch.sh $start $NUM_RUNS $RADIUS $RELOCATION $i $SD $DATE $SIM_DIR $WAF_DIR $SIM_COMMIT $SCRIPT_COMMIT
-#done
-
-
-### RELOCATION RANGE
-STARTNUM=581
-for (( i = 1, j = 1; i <= 8192; i+=200, j++ )); do
-	#statements
-	start=$((STARTNUM + (j-1) * NUM_RUNS))
-	./runbatch.sh $start $NUM_RUNS $RADIUS $i $SPACE $SD $DATE $SIM_DIR $WAF_DIR $SIM_COMMIT $SCRIPT_COMMIT
-done
+# ### RADUS RANGE
+# STARTNUM=1
+# for (( i = 1; i < 20; i++ )); do
+# 	#statements
+# 	start=$((STARTNUM + (i-1) * NUM_RUNS))
+# 	./runbatch.sh $start $NUM_RUNS $i $RELOCATION $SPACE $SD $DATE $SIM_DIR $WAF_DIR $SIM_COMMIT $SCRIPT_COMMIT
+# done
+#
+# ### CAPACITY RANGE
+# STARTNUM=191
+# for (( i = 1; i < 40; i++ )); do
+# 	#statements
+# 	start=$((STARTNUM + (i-1) * NUM_RUNS))
+# 	./runbatch.sh $start $NUM_RUNS $RADIUS $RELOCATION $i $SD $DATE $SIM_DIR $WAF_DIR $SIM_COMMIT $SCRIPT_COMMIT
+# done
+#
+# #for (( i = 20; i < 40; i++ )); do
+# #	#statements
+# #	start=$((STARTNUM + (i-1) * NUM_RUNS))
+# #	./runbatch.sh $start $NUM_RUNS $RADIUS $RELOCATION $i $SD $DATE $SIM_DIR $WAF_DIR $SIM_COMMIT $SCRIPT_COMMIT
+# #done
+#
+#
+# ### RELOCATION RANGE
+# STARTNUM=581
+# for (( i = 1, j = 1; i <= 8192; i+=200, j++ )); do
+# 	#statements
+# 	start=$((STARTNUM + (j-1) * NUM_RUNS))
+# 	./runbatch.sh $start $NUM_RUNS $RADIUS $i $SPACE $SD $DATE $SIM_DIR $WAF_DIR $SIM_COMMIT $SCRIPT_COMMIT
+# done
 
 
 ### STANDARD DEVIATION RANGE
