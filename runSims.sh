@@ -63,7 +63,7 @@ done
 
 
 ### STANDARD DEVIATION RANGE
-STARTNUM=981
+STARTNUM=991
 for (( i = 0; i <= 10; i++ )); do
     #statements
     sd=$(echo "scale=2; $i/10" | bc | awk '{printf "%.2f", $0}')
