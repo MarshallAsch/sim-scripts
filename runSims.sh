@@ -32,7 +32,7 @@ ARG_FILE=$(mktemp -p $DATA_DIR)
 
 
 STARTNUM=1
-NUM_RUNS=1
+NUM_RUNS=10
 
 # default values if none is specified
 RADIUS=7
@@ -50,7 +50,7 @@ SCRIPT_COMMIT=$(git rev-parse --short HEAD)
 
 ### RADUS RANGE
 STARTNUM=1
-for (( i = 1; i < 2; i++ )); do
+for (( i = 1; i < 20; i++ )); do
 	#statements
 	start=$((STARTNUM + (i-1) * NUM_RUNS))
 	./runBatch.sh $start $NUM_RUNS $i $RELOCATION $SPACE $SD $DATE $SIM_DIR $WAF_DIR $SIM_COMMIT $SCRIPT_COMMIT $ARG_FILE $DATA_DIR
@@ -58,14 +58,20 @@ done
 
 ### CAPACITY RANGE
 STARTNUM=191
+after=0
 for (( i = 1; i < 40; i++ )); do
+    if [ "$i" -eq "$SPACE" ]
+    then
+        after=1
+        continue
+    fi
 	#statements
-	start=$((STARTNUM + (i-1) * NUM_RUNS))
+	start=$((STARTNUM + (i - 1 - after) * NUM_RUNS))
 	./runBatch.sh $start $NUM_RUNS $RADIUS $RELOCATION $i $SD $DATE $SIM_DIR $WAF_DIR $SIM_COMMIT $SCRIPT_COMMIT $ARG_FILE $DATA_DIR
 done
 
 ### RELOCATION RANGE
-STARTNUM=581
+STARTNUM=580
 for (( i = 1, j = 1; i <= 8192; i+=200, j++ )); do
 	#statements
 	start=$((STARTNUM + (j-1) * NUM_RUNS))
@@ -73,11 +79,11 @@ for (( i = 1, j = 1; i <= 8192; i+=200, j++ )); do
 done
 
 ### STANDARD DEVIATION RANGE
-STARTNUM=991
-for (( i = 0; i <= 10; i++ )); do
+STARTNUM=990
+for (( i = 1; i <= 10; i++ )); do
     #statements
     sd=$(echo "scale=2; $i/10" | bc | awk '{printf "%.2f", $0}')
-    start=$((STARTNUM + (i) * NUM_RUNS))
+    start=$((STARTNUM + (i-1) * NUM_RUNS))
    ./runBatch.sh $start $NUM_RUNS $RADIUS $RELOCATION $SPACE $sd $DATE $SIM_DIR $WAF_DIR $SIM_COMMIT $SCRIPT_COMMIT $ARG_FILE $DATA_DIR
 done
 
