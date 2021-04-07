@@ -21,6 +21,12 @@ then
     exit 1
 fi
 
+if [ -d "$DATA_DIR" ]
+then
+    echo "Can not use the same data directory that was used previously, please pick another one"
+    exit 1
+fi
+
 mkdir -p $DATA_DIR
 ARG_FILE=$(mktemp -p $DATA_DIR)
 
