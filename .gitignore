@@ -9,3 +9,4 @@ DATA_*
 # R files that should not be commited
 .RData
 .Rhistory
+*.png
