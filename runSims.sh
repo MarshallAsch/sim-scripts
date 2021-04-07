@@ -83,4 +83,4 @@ done
 
 
 ## Run parallel
-parallel -a $ARG_FILE --colsep ' ' -j+0 --eta ./runOne.sh
+parallel -a $ARG_FILE --colsep ' ' -j+0 --eta ./runOne.sh >"$DATA_DIR/log.out" 2>"$DATA_DIR/log.err"
