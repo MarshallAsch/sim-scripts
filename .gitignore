@@ -1,8 +1,11 @@
 
 #ignore the arg file used when running GNU parallel
-argfile.txt
+tmp.*
 
 
 # Ignore all the generated data
-DATA
-PLOT_TEST
+DATA_*
+
+# R files that should not be commited
+.RData
+.Rhistory

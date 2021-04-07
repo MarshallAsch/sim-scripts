@@ -13,13 +13,15 @@ SIM_DIR=$8
 WAF_DIR=$9
 SIM_COMMIT=${10}
 SCRIPT_COMMIT=${11}
+ARG_FILE=${12}
+DATA_DIR=${13}
 
 TYPE=1
-if [[ "$SD" != "0" ]]; then TYPE=3 ; fi
+if [[ "$SD" != "0.00" ]]; then TYPE=3 ; fi
 
 
 #$DATE=$(date +"%A %B %d, %Y")
-FOLDER_NAME="DATA/BATCH-R${RADIUS}-T${RELOCATION}-C${SPACE}-SD${SD}"
+FOLDER_NAME="$DATA_DIR/BATCH-R${RADIUS}-T${RELOCATION}-C${SPACE}-SD${SD}"
 NOTES="$FOLDER_NAME/NOTES.txt"
 #TIME_FILE="$FOLDER_NAME/RUNTIME.txt"
 
@@ -48,7 +50,7 @@ echo "$WAF_DIR/waf --run  \"$SIM_DIR/saf --run-time=50000 --seed=57140259 --tota
  --min-speed=0 --max-speed=1 --min-pause=0 --max-pause=0\" "  >> "$NOTES"
 
 for (( i = STARTNUM; i < STARTNUM+NUM_RUNS; i++ )); do
-    echo "$i $RADIUS $RELOCATION $SPACE $TYPE $SD $SIM_DIR $WAF_DIR $FOLDER_NAME" >> argfile.txt
+    echo "$i $RADIUS $RELOCATION $SPACE $TYPE $SD $SIM_DIR $WAF_DIR $FOLDER_NAME" >> "$ARG_FILE"
 	#./runOne.sh $i $RADIUS $RELOCATION  $SPACE $TYPE $SD $SIM_DIR $WAF_DIR $FOLDER_NAME $TIME_FILE
 	#mv "$WAF_DIR/data-$i.sca" "$FOLDER_NAME/data-$i.sca"
 done
