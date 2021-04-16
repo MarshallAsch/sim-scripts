@@ -32,7 +32,7 @@ ARG_FILE=$(mktemp -p $DATA_DIR)
 
 
 STARTNUM=1
-NUM_RUNS=10
+NUM_RUNS=2
 
 # default values if none is specified
 RADIUS=7

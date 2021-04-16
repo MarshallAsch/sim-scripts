@@ -1,10 +1,26 @@
+#!/usr/bin/env Rscript
+
 
 # helper function to calculate the standard error for the values
 std_err <- function(x) sd(x) / sqrt(length(x))
 
+args = commandArgs(trailingOnly=TRUE)
+
+if (length(args) != 1) {
+    stop("Need to specify the name of the folder that has the input files", call.=FALSE)
+}
+
+# this is the folder to use
+dir <- args[1]
+
+inFile <- file.path(dir, "stats.txt")
+imgFolder <- file.path(dir, "plots")
+
+# create the image directory
+dir.create(imgFolder, showWarnings=FALSE)
 
 # load the tsv file that contains all of the data
-data <- read.table(file="DATA_2/stats.txt", sep="\t", header=TRUE)
+data <- read.table(file=inFile, sep="\t", header=TRUE)
 
 # seperate out the x radius data
 d1 <- data[data $capacity == 10 ,]
@@ -12,7 +28,6 @@ d2 <- d1[d1 $standard.deviation == 0,]
 d3 <- d1[d1 $relocation.period == 256,]
 d4 <- data[data $standard.deviation == 0,]
 d5 <- d4[d4 $relocation.period  == 256,]
-
 
 
 radiusData <- d2[d2 $relocation.period == 256,]
@@ -47,112 +62,157 @@ capacityData <- d5[d5 $radius == 7,]
 avg <- aggregate(relocationData$accessability, list(relocationData$relocation.period), mean)
 err <- aggregate(relocationData$accessability, list(relocationData$relocation.period),std_err)
 
-png(file='relocation_accesability.png', width=3000, height=2500, res=300)
+png(file=file.path(imgFolder, 'relocation_accesability.png'), width=3000, height=2500, res=300)
 plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
     xlab="Relocation period (s)", ylab="data accessability %",
-    main="Data accessability for SAF, relocation period 1 - 8192, seconds")
+    main="Data accessability for application using SAF, relocation period 1 - 8192, seconds")
 
 arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
 dev.off()
 
 
-################################################
-# Plot the data traffic and the relocation period
-################################################
-
-avg <- aggregate(relocationData$total.traffic, list(relocationData$relocation.period), mean)
-err <- aggregate(relocationData$total.traffic, list(relocationData$relocation.period),std_err)
-
-png(file='relocation_traffic.png', width=3000, height=2500, res=300)
-plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
-    xlab="Relocation period (s)", ylab="data traffic (number messaages sent",
-    main="Data traffic for SAF, relocation period 1 - 8192, seconds")
-
-arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
-dev.off()
-
-################################################
-# Plot the data accessability and the Access Frequency SD
-################################################
-
-avg <- aggregate(sdData$accessability, list(sdData$standard.deviation), mean)
-err <- aggregate(sdData$accessability, list(sdData$standard.deviation),std_err)
-
-png(file='standard_deviation_accesability.png', width=3000, height=2500, res=300)
-plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
-    xlab="Access Frequency SD", ylab="data accessability %",
-    main="Data accessability for SAF, Access Frequency SD 0-1")
-
-arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
-dev.off()
-
-################################################
-# Plot the data traffic and the Access Frequency SD
-################################################
-
-avg <- aggregate(sdData$total.traffic, list(sdData$standard.deviation), mean)
-err <- aggregate(sdData$total.traffic, list(sdData$standard.deviation),std_err)
-
-png(file='standard_deviation_traffic.png', width=3000, height=2500, res=300)
-plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
-    xlab="Access Frequency SD", ylab="data traffic (number messaages sent",
-    main="Data traffic for SAF, Access Frequency SD 0-1")
-
-arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
-dev.off()
-
-################################################
-# Plot the data accessability and the radius
-################################################
-avg <- aggregate(radiusData$accessability, list(radiusData$radius), mean)
-err <- aggregate(radiusData$accessability, list(radiusData$radius),std_err)
-
-png(file='radius_accesability.png', width=3000, height=2500, res=300)
-plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
-    xlab="Radius (m)", ylab="data accessability %",
-    main="Data accessability for SAF, radius from 1-20m")
-
-arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
-dev.off()
-
-################################################
-# Plot the data traffic and the radius
-################################################
-avg <- aggregate(radiusData$total.traffic, list(radiusData$radius), mean)
-err <- aggregate(radiusData$total.traffic, list(radiusData$radius),std_err)
-
-png(file='radius_traffic.png', width=3000, height=2500, res=300)
-plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
-    xlab="Radius (m)", ylab="data traffic (number of messages sent)",
-    main="Data traffic for SAF, radius from 1-20m")
-
-arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
-dev.off()
-
-################################################
-# Plot the data accessability and the capacity
-################################################
-avg <- aggregate(capacityData$accessability, list(capacityData$capacity), mean)
-err <- aggregate(capacityData$accessability, list(capacityData$capacity),std_err)
-
-png(file='capacity_accesability.png', width=3000, height=2500, res=300)
-plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
-    xlab="capacity (items)", ylab="data accessability %",
-    main="Data accessability for SAF, capacity from 1-40 data items")
-
-arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
-dev.off()
-
-################################################
-# Plot the data traffic and the capacity
-################################################
-avg <- aggregate(capacityData$total.traffic, list(capacityData$capacity), mean)
-err <- aggregate(capacityData$total.traffic, list(capacityData$capacity),std_err)
-
-png(file='capacity_traffic.png', width=3000, height=2500, res=300)
-plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
-    xlab="capacity (items)", ylab="data traffic (number of messages sent)",
-    main="Data traffic for SAF, capacity from 1-40 data items")
-
-arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
-dev.off()
+#################################################
+## Plot the data replication traffic and the relocation period
+#################################################
+#
+#avg <- aggregate(relocationData$reallocation.traffic, list(relocationData$relocation.period), mean)
+#err <- aggregate(relocationData$reallocation.traffic, list(relocationData$relocation.period),std_err)
+#
+#png(file=file.path(imgFolder, 'relocation_traffic.png'), width=3000, height=2500, res=300)
+#plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
+#    xlab="Relocation period (s)", ylab="data traffic (number messaages sent",
+#    main="Data traffic for reallocation only SAF, relocation period 1 - 8192, seconds")
+#
+#arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
+#dev.off()
+#
+#################################################
+## Plot the data accessability and the Access Frequency SD
+#################################################
+#
+#avg <- aggregate(sdData$accessability, list(sdData$standard.deviation), mean)
+#err <- aggregate(sdData$accessability, list(sdData$standard.deviation),std_err)
+#
+#png(file=file.path(imgFolder, 'standard_deviation_accesability.png'), width=3000, height=2500, res=300)
+#plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
+#    xlab="Access Frequency SD", ylab="data accessability %",
+#    main="Data accessability for application using SAF, Access Frequency SD 0-1")
+#
+#arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
+#dev.off()
+#
+#################################################
+## Plot the data traffic and the Access Frequency SD
+#################################################
+#
+#avg <- aggregate(sdData$reallocation.traffic, list(sdData$standard.deviation), mean)
+#err <- aggregate(sdData$reallocation.traffic, list(sdData$standard.deviation),std_err)
+#
+#png(file=file.path(imgFolder, 'standard_deviation_traffic.png'), width=3000, height=2500, res=300)
+#plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
+#    xlab="Access Frequency SD", ylab="data traffic (number messaages sent",
+#    main="Data traffic for reallocation SAF, Access Frequency SD 0-1")
+#
+#arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
+#dev.off()
+#
+#################################################
+## Plot the data accessability and the radius
+#################################################
+#avg <- aggregate(radiusData$accessability, list(radiusData$radius), mean)
+#err <- aggregate(radiusData$accessability, list(radiusData$radius),std_err)
+#
+#png(file=file.path(imgFolder, 'radius_accesability.png'), width=3000, height=2500, res=300)
+#plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
+#    xlab="Radius (m)", ylab="data accessability %",
+#    main="Data accessability for application using SAF, radius from 1-20m")
+#
+#arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
+#dev.off()
+#
+#################################################
+## Plot the data traffic and the radius
+#################################################
+#avg <- aggregate(radiusData$reallocation.traffic, list(radiusData$radius), mean)
+#err <- aggregate(radiusData$reallocation.traffic, list(radiusData$radius),std_err)
+#
+#png(file=file.path(imgFolder, 'radius_traffic.png'), width=3000, height=2500, res=300)
+#plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
+#    xlab="Radius (m)", ylab="data traffic (number of messages sent)",
+#    main="Data traffic for reallocation SAF, radius from 1-20m")
+#
+#arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
+#dev.off()
+#
+#################################################
+## Plot the applicaiton lookup delay on time and the radius
+#################################################
+#avg <- aggregate(radiusData$lookup.ontime.delay.average, list(radiusData$radius), mean)
+#err <- aggregate(radiusData$lookup.ontime.delay.average, list(radiusData$radius),std_err)
+#
+#png(file=file.path(imgFolder, 'radius_ontime.png'), width=3000, height=2500, res=300)
+#plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
+#    xlab="Radius (m)", ylab="average first reponse lookup delay (ms)",
+#    main="Lookup delay on for first response for application using SAF, radius from 1-20m")
+#
+#arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
+#dev.off()
+#
+#################################################
+## Plot the applicaiton lookup delay late and the radius
+#################################################
+#avg <- aggregate(radiusData$lookup.late.delay.average, list(radiusData$radius), mean)
+#err <- aggregate(radiusData$lookup.late.delay.average, list(radiusData$radius),std_err)
+#
+#png(file=file.path(imgFolder, 'radius_late.png'), width=3000, height=2500, res=300)
+#plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
+#    xlab="Radius (m)", ylab="average reponse lookup delay after the first (ms)",
+#    main="Lookup delay late for application using SAF, radius from 1-20m")
+#
+#arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
+#dev.off()
+#
+#
+#################################################
+## Plot the applicaiton messages lost and the radius
+#################################################
+#avg <- aggregate(radiusData$app.lost, list(radiusData$radius), mean)
+#err <- aggregate(radiusData$app.lost, list(radiusData$radius),std_err)
+#
+#png(file=file.path(imgFolder, 'radius_lost.png'), width=3000, height=2500, res=300)
+#plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
+#    xlab="Radius (m)", ylab="number of messages sent but never recieved",
+#    main="Messages lost in the network for application using SAF, radius from 1-20m")
+#
+#arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
+#dev.off()
+#
+#
+#################################################
+## Plot the data accessability and the capacity
+#################################################
+#avg <- aggregate(capacityData$accessability, list(capacityData$capacity), mean)
+#err <- aggregate(capacityData$accessability, list(capacityData$capacity),std_err)
+#
+#png(file=file.path(imgFolder, 'capacity_accesability.png'), width=3000, height=2500, res=300)
+#plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
+#    xlab="capacity (items)", ylab="data accessability %",
+#    main="Data accessability for application using SAF, capacity from 1-40 data items")
+#
+#arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
+#dev.off()
+#
+#################################################
+## Plot the data traffic and the capacity
+#################################################
+#avg <- aggregate(capacityData$reallocation.traffic, list(capacityData$capacity), mean)
+#err <- aggregate(capacityData$reallocation.traffic, list(capacityData$capacity),std_err)
+#
+#png(file=file.path(imgFolder, 'capacity_traffic.png'), width=3000, height=2500, res=300)
+#plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
+#    xlab="capacity (items)", ylab="data traffic (number of messages sent)",
+#    main="Data traffic for reallocation SAF, capacity from 1-40 data items")
+#
+#arrows(avg$Group.1, avg$x-err$x, avg$Group.1, avg$x+err$x, length=0.1, angle=90,code=3)
+#dev.off()
+#
