@@ -2,6 +2,7 @@
 
 # helper function to calculate the standard error for the values
 std_err <- function(x) sd(x) / sqrt(length(x))
+err[is.na(err)] <- 0
 
 args = commandArgs(trailingOnly=TRUE)
 
@@ -49,7 +50,8 @@ capacityData <- d5[d5 $radius == 7,]
 ################################################
 
 avg <- aggregate(relocationData$accessability, list(relocationData$relocation.period), mean)
-err <- aggregate(relocationData$accessability, list(relocationData$relocation.period),std_err)
+err <- aggregate(relocationData$accessability, list(relocationData$relocation.period), std_err)
+err[is.na(err)] <- 0
 
 png(file=file.path(imgFolder, 'relocation_accesability.png'), width=3000, height=2500, res=300)
 plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
@@ -66,7 +68,8 @@ print('done plotting access x reallocation')
 ################################################
 
 avg <- aggregate(relocationData$reallocation.traffic, list(relocationData$relocation.period), mean)
-err <- aggregate(relocationData$reallocation.traffic, list(relocationData$relocation.period),std_err)
+err <- aggregate(relocationData$reallocation.traffic, list(relocationData$relocation.period), std_err)
+err[is.na(err)] <- 0
 
 png(file=file.path(imgFolder, 'relocation_traffic.png'), width=3000, height=2500, res=300)
 plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
@@ -82,7 +85,8 @@ print('done plotting replication traffic x reallocation')
 ################################################
 
 avg <- aggregate(sdData$accessability, list(sdData$standard.deviation), mean)
-err <- aggregate(sdData$accessability, list(sdData$standard.deviation),std_err)
+err <- aggregate(sdData$accessability, list(sdData$standard.deviation), std_err)
+err[is.na(err)] <- 0
 
 png(file=file.path(imgFolder, 'standard_deviation_accesability.png'), width=3000, height=2500, res=300)
 plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
@@ -98,7 +102,8 @@ print('done plotting accessability x access frequency SD')
 ################################################
 
 avg <- aggregate(sdData$reallocation.traffic, list(sdData$standard.deviation), mean)
-err <- aggregate(sdData$reallocation.traffic, list(sdData$standard.deviation),std_err)
+err <- aggregate(sdData$reallocation.traffic, list(sdData$standard.deviation), std_err)
+err[is.na(err)] <- 0
 
 png(file=file.path(imgFolder, 'standard_deviation_traffic.png'), width=3000, height=2500, res=300)
 plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
@@ -113,7 +118,8 @@ print('done plotting reallocation traffic x access frequency SD')
 # Plot the data accessability and the radius
 ################################################
 avg <- aggregate(radiusData$accessability, list(radiusData$radius), mean)
-err <- aggregate(radiusData$accessability, list(radiusData$radius),std_err)
+err <- aggregate(radiusData$accessability, list(radiusData$radius), std_err)
+err[is.na(err)] <- 0
 
 png(file=file.path(imgFolder, 'radius_accesability.png'), width=3000, height=2500, res=300)
 plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
@@ -128,7 +134,8 @@ print('done plotting accessability x radius')
 # Plot the data traffic and the radius
 ################################################
 avg <- aggregate(radiusData$reallocation.traffic, list(radiusData$radius), mean)
-err <- aggregate(radiusData$reallocation.traffic, list(radiusData$radius),std_err)
+err <- aggregate(radiusData$reallocation.traffic, list(radiusData$radius), std_err)
+err[is.na(err)] <- 0
 
 png(file=file.path(imgFolder, 'radius_traffic.png'), width=3000, height=2500, res=300)
 plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
@@ -143,7 +150,8 @@ print('done plotting reallocation traffic x radius')
 # Plot the applicaiton lookup delay on time and the radius
 ################################################
 avg <- aggregate(radiusData$lookup.ontime.delay.average, list(radiusData$radius), mean)
-err <- aggregate(radiusData$lookup.ontime.delay.average, list(radiusData$radius),std_err)
+err <- aggregate(radiusData$lookup.ontime.delay.average, list(radiusData$radius), std_err)
+err[is.na(err)] <- 0
 
 png(file=file.path(imgFolder, 'radius_ontime.png'), width=3000, height=2500, res=300)
 plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
@@ -158,7 +166,8 @@ print('done plotting application avg delay x radius')
 # Plot the applicaiton lookup delay late and the radius
 ################################################
 avg <- aggregate(radiusData$lookup.late.delay.average, list(radiusData$radius), mean)
-err <- aggregate(radiusData$lookup.late.delay.average, list(radiusData$radius),std_err)
+err <- aggregate(radiusData$lookup.late.delay.average, list(radiusData$radius), std_err)
+err[is.na(err)] <- 0
 
 png(file=file.path(imgFolder, 'radius_late.png'), width=3000, height=2500, res=300)
 plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
@@ -173,7 +182,8 @@ print('done plotting applicaiton late avg delay x radius')
 # Plot the applicaiton messages lost and the radius
 ################################################
 avg <- aggregate(radiusData$app.lost, list(radiusData$radius), mean)
-err <- aggregate(radiusData$app.lost, list(radiusData$radius),std_err)
+err <- aggregate(radiusData$app.lost, list(radiusData$radius), std_err)
+err[is.na(err)] <- 0
 
 png(file=file.path(imgFolder, 'radius_lost.png'), width=3000, height=2500, res=300)
 plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
@@ -188,7 +198,8 @@ print('done plotting application lost x radius')
 # Plot the data accessability and the capacity
 ################################################
 avg <- aggregate(capacityData$accessability, list(capacityData$capacity), mean)
-err <- aggregate(capacityData$accessability, list(capacityData$capacity),std_err)
+err <- aggregate(capacityData$accessability, list(capacityData$capacity), std_err)
+err[is.na(err)] <- 0
 
 png(file=file.path(imgFolder, 'capacity_accesability.png'), width=3000, height=2500, res=300)
 plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
@@ -203,7 +214,8 @@ print('done plotting accessability x capacity')
 # Plot the data traffic and the capacity
 ################################################
 avg <- aggregate(capacityData$reallocation.traffic, list(capacityData$capacity), mean)
-err <- aggregate(capacityData$reallocation.traffic, list(capacityData$capacity),std_err)
+err <- aggregate(capacityData$reallocation.traffic, list(capacityData$capacity), std_err)
+err[is.na(err)] <- 0
 
 png(file=file.path(imgFolder, 'capacity_traffic.png'), width=3000, height=2500, res=300)
 plot (avg$Group.1, avg$x, ylim=range(c(avg$x-err$x,avg$x+err$x)),
