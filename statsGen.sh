@@ -34,8 +34,9 @@ END {
     }
 }'
 
-FIELD_HEADERS=$(cat $f | grep "scalar" | grep -v "Author" | cut -d ' ' -f 3 | awk "$AWK_SCRIPT")
+#FIELD_HEADERS=$(cat $f | grep "scalar" | grep -v "Author" | cut -d ' ' -f 3 | awk "$AWK_SCRIPT")
 
+FIELD_HEADERS="cache-hit lookup-sent lookup-rcv lookup-rsp-sent lookup-timeout realloc-sent realloc-timeout realloc-rcv realloc-rsp-sent lookup-ontime-delay-count lookup-ontime-delay-total lookup-ontime-delay-average lookup-ontime-delay-max lookup-ontime-delay-min lookup-late-delay-count lookup-late-delay-total lookup-late-delay-average lookup-late-delay-max lookup-late-delay-min realloc-ontime-delay-count realloc-ontime-delay-total realloc-ontime-delay-average realloc-ontime-delay-max realloc-ontime-delay-min realloc-late-delay-count realloc-late-delay-total realloc-late-delay-average realloc-late-delay-max realloc-late-delay-min"
 echo "radius relocation-period capacity standard-deviation $FIELD_HEADERS app-traffic reallocation-traffic total-traffic app-lost reallocation-lost accessability" > $STATS_FILE
 
 # collect the stats for
@@ -52,7 +53,7 @@ handle() {
     # collect the values for each individual run of the batch
     VALS="$R $T $C $SD"
     for f in ${files}; do
-        values=$(cat $f | grep "scalar" | grep -v "Author" | cut -d ' ' -f 4 | awk "$AWK_SCRIPT")
+        #values=$(cat $f | grep "scalar" | grep -v "Author" | cut -d ' ' -f 4 | awk "$AWK_SCRIPT")
         cache=$(cat $f | grep 'cache-hit' | cut -d ' ' -f 4)
 
         look_sent=$(cat $f | grep 'lookup-sent' | cut -d ' ' -f 4)
@@ -64,14 +65,14 @@ handle() {
 
 
         # timing values to be used later, not in these inital sims
-        #=$(cat $f | grep 'lookup-ontime-delay-total' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'lookup-ontime-delay-average' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'lookup-ontime-delay-max' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'lookup-ontime-delay-min' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'lookup-late-delay-total' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'lookup-late-delay-average' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'lookup-late-delay-max' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'lookup-late-delay-min' | cut -d ' ' -f 4)
+        look_ontime_total=$(( $(cat $f | grep 'lookup-ontime-delay-total' | cut -d ' ' -f 4) + 0 ))
+        look_ontime_avg=$(( $(cat $f | grep 'lookup-ontime-delay-average' | cut -d ' ' -f 4) + 0 ))
+        look_ontime_max=$(( $(cat $f | grep 'lookup-ontime-delay-max' | cut -d ' ' -f 4) + 0 ))
+        look_ontime_min=$(( $(cat $f | grep 'lookup-ontime-delay-min' | cut -d ' ' -f 4) + 0 ))
+        look_late_total=$(( $(cat $f | grep 'lookup-late-delay-total' | cut -d ' ' -f 4) + 0 ))
+        look_late_avg=$(( $(cat $f | grep 'lookup-late-delay-average' | cut -d ' ' -f 4) + 0 ))
+        look_late_max=$(( $(cat $f | grep 'lookup-late-delay-max' | cut -d ' ' -f 4) + 0 ))
+        look_late_min=$(( $(cat $f | grep 'lookup-late-delay-min' | cut -d ' ' -f 4) + 0 ))
 
 
         realoc_sent=$(cat $f | grep 'realloc-sent' | cut -d ' ' -f 4)
@@ -82,14 +83,14 @@ handle() {
         realloc_late=$(cat $f | grep 'realloc-late-delay-count' | cut -d ' ' -f 4)
 
         # timing values to be used later, not in these inital sims
-        #=$(cat $f | grep 'realloc-ontime-delay-total' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'realloc-ontime-delay-average' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'realloc-ontime-delay-max' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'realloc-ontime-delay-min' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'realloc-late-delay-total' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'realloc-late-delay-average' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'realloc-late-delay-max' | cut -d ' ' -f 4)
-        #=$(cat $f | grep 'realloc-late-delay-min' | cut -d ' ' -f 4)
+        realloc_ontime_total=$(( $(cat $f | grep 'realloc-ontime-delay-total' | cut -d ' ' -f 4) + 0 ))
+        realloc_ontime_avg=$(( $(cat $f | grep 'realloc-ontime-delay-average' | cut -d ' ' -f 4) + 0 ))
+        realloc_ontime_max=$(( $(cat $f | grep 'realloc-ontime-delay-max' | cut -d ' ' -f 4) + 0 ))
+        realloc_ontime_min=$(( $(cat $f | grep 'realloc-ontime-delay-min' | cut -d ' ' -f 4) + 0 ))
+        realloc_late_total=$(( $(cat $f | grep 'realloc-late-delay-total' | cut -d ' ' -f 4) + 0 ))
+        realloc_late_avg=$(( $(cat $f | grep 'realloc-late-delay-average' | cut -d ' ' -f 4) + 0 ))
+        realloc_late_max=$(( $(cat $f | grep 'realloc-late-delay-max' | cut -d ' ' -f 4) + 0 ))
+        realloc_late_min=$(( $(cat $f | grep 'realloc-late-delay-min' | cut -d ' ' -f 4) + 0 ))
 
         application_lookups=$(($cache + $look_sent))
         realloc_traffic=$(($realloc_sent + $realloc_rsp_sent))
@@ -101,7 +102,8 @@ handle() {
 
         total_traffic=$(($look_sent + $look_rsp_sent + $realloc_sent + $realloc_rsp_sent))
         accessability=$(echo "scale=6; $application_success / $application_lookups" | bc | awk '{printf "%.6f", $0}')
-
+        
+        values="$cache $look_sent $look_rcv $look_rsp_sent $look_timeout $realoc_sent $realloc_timeout $realloc_rcv $realloc_rsp_sent $look_ontime $look_ontime_total $look_ontime_avg $look_ontime_max $look_ontime_min $look_late $look_late_total $look_late_avg $look_late_max $look_late_min $realloc_ontime $realloc_ontime_total $realloc_ontime_avg $realloc_ontime_max $realloc_ontime_min $realloc_late $realloc_late_total $realloc_late_avg $realloc_late_max $realloc_late_min"
         echo "$VALS $values $application_traffic $realloc_traffic $total_traffic $application_lost $realloc_lost $accessability" >> $STATS_FILE
 
     done;
